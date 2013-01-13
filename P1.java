@@ -1,3 +1,6 @@
+//author: James Rothering
+//email: jr@jamesrothering.com
+//Project Euler Problem Solutions
 //Problem 1
 //  If we list all the natural numbers below 10
 //  that are multiples of 3 or 5, we get 3, 5, 6 and 9.
