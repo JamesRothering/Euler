@@ -7,11 +7,19 @@ public class P012
 
     int i; 
     int aNumDivisors = 0;
-    for (i =1; aNumDivisors < 500; i++)
+    for (i =1; aNumDivisors < 600; i++)
     {
       aNumDivisors = getDivisors(getTriangularNumber(i));
+      //this is to monitor progress
       if (aNumDivisors>100)
       {System.out.println("aNumDivisors=" + aNumDivisors);}
+      //this is when we hit the answer
+      if (aNumDivisors>500)
+      {
+        System.out.println("!!!Got the answer: " + getTriangularNumber(i) );
+        System.out.println("!!! Number of divisors: " + aNumDivisors);
+        System.exit(0); //terminate the loop
+      }//end-then
     }//end-for
 
     System.out.println("aNumDivisors=" + aNumDivisors  );
