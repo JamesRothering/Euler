@@ -1,3 +1,4 @@
+//Author: James Rothering
 import java.math.BigInteger;
 public class P025
 {
