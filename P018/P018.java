@@ -11,7 +11,10 @@ import java.io.*;
 
 public class P018
 {
-  private static final String aFileName = "data1.txt"; 
+//  public static final int aSizeR=15;
+//  public static final int aSizeC=15;
+
+  private static final String aFileName = "data1.txt";
   public static void main(String[] args)
   {
     System.out.println("loading up the data");
@@ -23,16 +26,16 @@ public class P018
       int            aCurrRow = 0;
       while ( (aLine = aData.readLine()) != null )
       {
-        aCurrRow++;
         String[] sVals = aLine.split("\\s");
         for (int i =0; i< sVals.length; i++)
         {
           Node aNode = new Node(aCurrRow,
-                                (new Integer(sVals[i])).intValue()
+                                i, 
+                                ( new Integer(sVals[i])).intValue() 
                                );
           aNode.print();
         }
-        System.out.println();
+        aCurrRow++;
       }//e-while
     }
     catch(Exception e)
@@ -44,17 +47,70 @@ public class P018
 
 class Node
 {
+  public static final int aSizeR=15;
+  public static final int aSizeC=15;
+
   private  final int aRow;
+  private  final int aCol;
   private  final int aVal;
-  Node(int aRow, int aVal)
+  private  Node aLeftNode = null;
+  private  Node aRightNode = null;
+  static   private  Node[][]  allNodes = new Node[aSizeR][aSizeC];
+
+  private  static void setNode(int aRow, int aCol, Node aNode)
   {
+    allNodes[aRow][aCol]=aNode; //track them for later traversal 
+  }
+
+  private static Node getNode(int aRow, int aCol )
+  {
+    return allNodes[aRow][aCol];
+  }
+
+  Node(int aRow, int aCol, int aVal)
+  {
+    Node.setNode(aRow,aCol,this);
     this.aRow = aRow;
+    this.aCol = aCol;
     this.aVal = aVal;
+    Node.setNode(aRow,aCol,this);
+    if (aRow>1)
+    {
+      this.aLeftNode  = getLeftNode(aRow,aCol);
+      this.aRightNode = getRightNode(aRow,aCol);
+    }
+  }
+
+  static Node getLeftNode(int aRow, int aCol)
+  {
+    if (0 == aCol)
+      return null; //a left-most entry has no left node!
+    else
+    {
+      int retRow = aRow-1;
+      int retCol = aCol-1;
+      return(allNodes[retRow][retCol]);
+    }
+  }
+
+  static Node getRightNode(int aRow, int aCol)
+  {
+    if (0 == aRow)
+      return null;
+    else
+    {
+      if (aCol < allNodes[aRow-1].length)
+      {
+        return allNodes[aRow-1][aCol] ;
+      }
+      else
+        return null; // last entry doesn't have a rightNode parent!
+    }
   }
 
   void print()
   {
-    System.out.println("aRow=" + aRow + " aVal=" + aVal);
+    System.out.println("aRow=" + aRow + " aCol=" + aCol + " aVal=" + aVal);
   }
 }
 
