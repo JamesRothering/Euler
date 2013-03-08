@@ -1,5 +1,12 @@
+//successfully answered Euler question #18 on 2012-03-08
+//note: change Node parms to the size of the triangle you are processing,
+//  or you'll get an array out of bounds exception. The final answer will
+//  be contained in the first node, but the whole array of nodes comprising the
+//  answer will be printed, so scroll up.
+//
 //question: why should an empty while loop without braces following
 //  lead to the compiler "expecting a class" message?
+//
 //first off, we try to calculate the number of possible combos
 //  given that we are told that there are 16,384 routes possible
 //so my first step is to make sure that I'm calcualting all the routes
@@ -18,7 +25,7 @@ import java.io.*;
 public class P018
 {
 
-  private static final String aFileName = "data1.txt";
+  private static final String aFileName = "data2.txt";
   public static void main(String[] args)
   {
     Node aRoot = loadData(); //store the root so we don't get GC network of nodes!
@@ -29,17 +36,7 @@ public class P018
   public static void processData(Node aRootNode)
   {
 System.out.println("++++++++starting the processing++++++++++");
-    System.out.println(aRootNode.allNodes.length);
-    for (int i = aRootNode.allNodes.length-1; i <aRootNode.allNodes.length-1; )
-    {//for the last row only, set aBestCumPathTotal = aVal
-      for (int j = aRootNode.allNodes[i].length-1; j >= 0; j--)
-      {
-        aRootNode.allNodes[i][j].setBestCumPathTotal
-         (
-          aRootNode.allNodes[i][j].getVal()
-         );
-      }
-    }
+//    System.out.println(aRootNode.allNodes.length);
 
     for (int i = aRootNode.allNodes.length-2; i >= 0; i--)
     {//length-1 for zero indexing adjustment; length-2 to skip the bottommost row
@@ -55,11 +52,11 @@ System.out.println("++++++++starting the processing++++++++++");
         {/*do nothing*/}
         else 
         {
-          System.out.println("i=" + i + " j=" + j);
-          curNode.print();
+//          System.out.println("i=" + i + " j=" + j);
+//          curNode.print();
           curNode.getLeftNode().getVal();
 
-          System.out.println("got here");
+//          System.out.println("got here");
           curNode.setBest(
                            (  (curNode.getLeftNode()).getBestCumPathTotal() >
                               (curNode.getRightNode()).getBestCumPathTotal()
@@ -74,15 +71,30 @@ System.out.println("++++++++starting the processing++++++++++");
                                  curNode.getLeftNode().getBestCumPathTotal()
                               :  curNode.getRightNode().getBestCumPathTotal()
                             );
-          curNode.print();
+//          curNode.print();
         }
       }//e-for
     }//e-for
+System.out.println("&&&&&&& Now printing out the full answer &&&&&&&");
+    Node aCurrNode = aRootNode.allNodes[0][0];
+    for (int i=0; i< aRootNode.allNodes.length; i++)
+    {
+      aCurrNode.print();
+      if (Side.LEFT == aCurrNode.getBest() )
+      {
+        aCurrNode = aCurrNode.getLeftNode();
+      }
+      else
+      {
+        aCurrNode = aCurrNode.getRightNode();
+      }
+
+    }
   }
 
   public static void setLinks(Node aRoot)
   { //re-traverse all the nodes and set up linkages 
-System.out.println("========starting to do the linkage================");
+//System.out.println("========starting to do the linkage================");
     for (int i = 0; i <= aRoot.allNodes.length-2;  i++)
     {//length-1 for zero-indexing;length-2 to also avoid the last row
       for (int j = 0; j < aRoot.allNodes[i].length-1; j++)
@@ -99,8 +111,8 @@ System.out.println("========starting to do the linkage================");
 
   public static Node loadData()
   {
-    System.out.println("loading up the data into a network of Nodes"
-                      +" indexed by a 2-d array");
+//    System.out.println("loading up the data into a network of Nodes"
+//                      +" indexed by a 2-d array");
     int aCurrRow;
     try
     {
@@ -117,7 +129,7 @@ System.out.println("========starting to do the linkage================");
                                 i, 
                                 ( new Integer(sVals[i])).intValue() 
                                );
-          aNode.print();
+//aNode.print();
         }
         aCurrRow++;
       }//e-while
@@ -134,8 +146,8 @@ enum Side {LEFT, RIGHT, NULL};
 
 class Node
 {
-  public static final int aSizeR = 4;
-  public static final int aSizeC = 4;
+  public static final int aSizeR = 15;
+  public static final int aSizeC = 15;
 
   private  final int aRow;
   private  final int aCol;
@@ -145,7 +157,6 @@ class Node
   static   protected  Node[][]  allNodes = new Node[aSizeR][aSizeC];
   private  Side   aBestDownStreamChoice = Side.NULL;
   private  int      aBestCumPathTotal = 0;
-
 
   private  static void setNode(int aRow, int aCol, Node aNode)
   {
@@ -174,10 +185,11 @@ class Node
 
   Node(int aRow, int aCol, int aVal)
   {
-
     this.aRow = aRow;
     this.aCol = aCol;
     this.aVal = aVal;
+    this.aBestCumPathTotal = aVal; //initialize to the value of itself;
+                                   //later we add in the best choice from beloe
     Node.setNode(aRow,aCol,this);
   }
 
@@ -206,10 +218,16 @@ class Node
     aBestDownStreamChoice = aSide;
   }
 
-  public void setBestCumPathTotal(int aVal)
+
+  public void setBestCumPathTotal(int aValBelow)
   {
-    this.aBestCumPathTotal = aBestCumPathTotal+aVal;
+    //aBestCumPathTotal was initialized in the constructor with the
+    // Node's own value. Now we add in the best value from below
+    this.aBestCumPathTotal +=  aValBelow;
+//System.out.println("Node:setBestCumPathTotal with:" + aVal + " totaled to:" +
+//                     aBestCumPathTotal + " on Node:" + this);
   }
+
 
   public int getBestCumPathTotal()
   {
