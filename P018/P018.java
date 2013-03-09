@@ -1,6 +1,8 @@
 //successfully answered Euler question #18 on 2012-03-08
 //note: change Node parms to the size of the triangle you are processing,
-//  or you'll get an array out of bounds exception. The final answer will
+//  or you'll get an array out of bounds exception.
+//  also, change the name of the input file parm
+// The final answer will
 //  be contained in the first node, but the whole array of nodes comprising the
 //  answer will be printed, so scroll up.
 //
@@ -25,7 +27,7 @@ import java.io.*;
 public class P018
 {
 
-  private static final String aFileName = "data2.txt";
+  private static final String aFileName = "triangle.txt";
   public static void main(String[] args)
   {
     Node aRoot = loadData(); //store the root so we don't get GC network of nodes!
@@ -75,21 +77,25 @@ System.out.println("++++++++starting the processing++++++++++");
         }
       }//e-for
     }//e-for
-System.out.println("&&&&&&& Now printing out the full answer &&&&&&&");
-    Node aCurrNode = aRootNode.allNodes[0][0];
-    for (int i=0; i< aRootNode.allNodes.length; i++)
-    {
-      aCurrNode.print();
-      if (Side.LEFT == aCurrNode.getBest() )
-      {
-        aCurrNode = aCurrNode.getLeftNode();
-      }
-      else
-      {
-        aCurrNode = aCurrNode.getRightNode();
-      }
-
-    }
+System.out.println("++++++++++ Now printing out the answer node ++++++++");
+    aRootNode.allNodes[0][0].print();
+   
+//This block would print out the whole tree of the answer
+//System.out.println("&&&&&&& Now printing out the full answer &&&&&&&");
+//    Node aCurrNode = aRootNode.allNodes[0][0];
+//    for (int i=0; i< aRootNode.allNodes.length; i++)
+//    {
+//      aCurrNode.print();
+//      if (Side.LEFT == aCurrNode.getBest() )
+//      {
+//        aCurrNode = aCurrNode.getLeftNode();
+//      }
+//      else
+//      {
+//        aCurrNode = aCurrNode.getRightNode();
+//      }
+//
+//    }
   }
 
   public static void setLinks(Node aRoot)
@@ -146,8 +152,8 @@ enum Side {LEFT, RIGHT, NULL};
 
 class Node
 {
-  public static final int aSizeR = 15;
-  public static final int aSizeC = 15;
+  public static final int aSizeR = 100;
+  public static final int aSizeC = 100;
 
   private  final int aRow;
   private  final int aCol;
